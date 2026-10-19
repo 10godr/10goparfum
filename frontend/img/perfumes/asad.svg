@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" role="img" aria-label="Lattafa Asad">
+<defs><radialGradient id="bg" cx="50%" cy="42%" r="70%"><stop offset="0" stop-color="#2e2a24" stop-opacity=".55"/><stop offset="1" stop-color="#050505"/></radialGradient>
+<linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#2e2a24"/><stop offset=".45" stop-color="#ffffff" stop-opacity=".28"/><stop offset="1" stop-color="#2e2a24"/></linearGradient></defs>
+<rect width="400" height="500" fill="url(#bg)"/>
+<ellipse cx="200" cy="440" rx="120" ry="12" fill="#000" opacity=".5"/>
+<rect x="178" y="136" width="44" height="34" fill="#C9A968"/><rect x="186" y="164" width="28" height="12" fill="#8B5E3C"/>
+<rect x="140" y="170" width="120" height="250" rx="6" fill="url(#g)" stroke="#C9A968" stroke-opacity=".5"/>
+<rect x="160" y="266" width="80" height="68" fill="#000" fill-opacity=".45" stroke="#E8DCC8" stroke-opacity=".35" stroke-width=".6"/>
+<text x="200" y="288" text-anchor="middle" font-family="Georgia,serif" font-size="9" letter-spacing="2" fill="#C9A968">LATTAFA</text>
+<text x="200" y="310" text-anchor="middle" font-family="Georgia,serif" font-size="16" fill="#E8DCC8">Asad</text>
+<rect x="150" y="190" width="10" height="150" fill="#fff" opacity=".07"/>
+</svg>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout de prueba · 10go's Perfumes</title>
+<meta name="description" content="Genera una orden de demostración. No se cobra ni se envía nada.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Plus+Jakarta+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 fill=%27%23000%27/%3E%3Ctext x=%2716%27 y=%2722%27 font-size=%2716%27 text-anchor=%27middle%27 fill=%27%23C9A968%27 font-family=%27serif%27%3E10%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<main class="section on-dark"><div class="wrap" id="checkout-view">
+  <p class="eyebrow">Checkout de demostración</p><h1 style="font-size:clamp(2rem,4vw,3rem)">Tu orden de prueba</h1>
+  <p class="demo-note">Proyecto de portafolio: no hay pasarela de pago, no se piden tarjetas y no se envía nada. Usa datos de prueba.</p>
+  <div class="checkout">
+    <div id="summary"></div>
+    <form id="order-form" novalidate>
+      <div class="field"><label for="c-name">Nombre (de prueba)</label><input id="c-name" name="customer_name" required minlength="2" autocomplete="off"></div>
+      <div class="field"><label for="c-email">Correo (de prueba)</label><input id="c-email" name="customer_email" type="email" required autocomplete="off"></div>
+      <div class="field"><label for="c-notes">Dirección o notas (de prueba)</label><textarea id="c-notes" name="notes" maxlength="500"></textarea></div>
+      <p class="error" id="error" role="alert"></p>
+      <button class="btn" type="submit">Generar orden de prueba</button>
+    </form>
+  </div>
+</div></main>
+<script type="module" src="js/checkout.js"></script>
+</body>
+</html>

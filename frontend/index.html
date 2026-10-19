@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10go's Perfumes · Decants y perfumería árabe (proyecto de portafolio)</title>
+<meta name="description" content="Proyecto de portafolio: catálogo de perfumes y decants. No es una tienda real.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Plus+Jakarta+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 fill=%27%23000%27/%3E%3Ctext x=%2716%27 y=%2722%27 font-size=%2716%27 text-anchor=%27middle%27 fill=%27%23C9A968%27 font-family=%27serif%27%3E10%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<main>
+  <div class="hero" id="hero" aria-roledescription="carrusel" aria-label="Destacados"></div>
+
+  <div class="pillars">
+    <div class="pillar"><h3>Catálogo real</h3><p>Datos y acordes olfativos de perfumes reales.</p></div>
+    <div class="pillar"><h3>Decants y botella</h3><p>Variantes de 3, 5 y 10 ml, o botella completa.</p></div>
+    <div class="pillar"><h3>Arquitectura fullstack</h3><p>FastAPI, SQLAlchemy y PostgreSQL.</p></div>
+    <div class="pillar"><h3>Proyecto demostrativo</h3><p>Simulación interactiva, sin cobros reales.</p></div>
+  </div>
+
+  <section class="section on-dark" id="categorias"><div class="wrap">
+    <p class="eyebrow">Categorías</p><h2>Tres maneras de empezar</h2>
+    <div class="cats">
+      <a class="cat" href="?category=Árabe#catalogo" data-cat="Árabe" style="--cat-bg:linear-gradient(135deg,#8a4520,#2a1608)"><h3>Árabes</h3><span>Lattafa · Afnan · Armaf</span></a>
+      <a class="cat" href="?category=Diseñador#catalogo" data-cat="Diseñador" style="--cat-bg:linear-gradient(135deg,#1b3b6b,#0a0f1a)"><h3>Diseñador</h3><span>Dior · Yves Saint Laurent</span></a>
+      <a class="cat" href="?category=Nicho#catalogo" data-cat="Nicho" style="--cat-bg:linear-gradient(135deg,#a03a2c,#240d0a)"><h3>Nicho</h3><span>Creed · Maison Francis Kurkdjian</span></a>
+    </div></div></section>
+
+  <section class="section on-charcoal" id="featured"><div class="wrap">
+    <p class="eyebrow">Destacados</p><h2>Los más buscados</h2>
+    <div class="grid" id="featured-grid" style="margin-top:34px"></div></div></section>
+
+  <section class="section on-light" id="catalogo"><div class="wrap">
+    <p class="eyebrow">Catálogo</p><h2>Encuentra tu aroma</h2>
+    <form class="filters" id="filters" autocomplete="off">
+      <div><label for="f-q">Buscar</label><input id="f-q" name="q" type="search" placeholder="Nombre o marca"></div>
+      <div><label for="f-category">Categoría</label><select id="f-category" name="category"><option value="">Todas</option></select></div>
+      <div><label for="f-family">Familia aromática</label><select id="f-family" name="family"><option value="">Todas</option></select></div>
+      <div><label for="f-note">Nota olfativa</label><select id="f-note" name="note"><option value="">Todas</option></select></div>
+      <div><label for="f-duration">Duración</label><select id="f-duration" name="duration"><option value="">Cualquiera</option></select></div>
+      <div><label for="f-sillage">Estela</label><select id="f-sillage" name="sillage"><option value="">Cualquiera</option></select></div>
+      <div><label for="f-occasion">Ocasión</label><select id="f-occasion" name="occasion"><option value="">Cualquiera</option></select></div>
+    </form>
+    <div class="results-bar"><span id="result-count" aria-live="polite"></span><button class="link" id="clear" type="button">Limpiar filtros</button></div>
+    <div class="grid" id="catalog-grid"></div></div></section>
+
+  <section class="section on-dark" id="guia"><div class="wrap narrow" style="margin-inline:auto">
+    <p class="eyebrow">Guía interactiva</p><h2>Todo sobre los decants</h2>
+    <details class="acc"><summary>¿Qué es un decant?</summary><div class="acc-body">Es una porción del perfume original pasada a un atomizador pequeño. Permite probar un aroma caro o desconocido durante semanas, sin comprar el frasco completo. El líquido es el mismo del frasco original.</div></details>
+    <details class="acc"><summary>¿Cuántos sprays rinde cada tamaño?</summary><div class="acc-body">Un spray libera aproximadamente 0.1 ml (varía según el atomizador). Valores orientativos:
+      <table><thead><tr><th>Tamaño</th><th>Sprays aprox.</th><th>Para qué sirve</th></tr></thead><tbody>
+      <tr><td>3 ml</td><td>~30</td><td>Probar el aroma unos días</td></tr><tr><td>5 ml</td><td>~50</td><td>Un viaje o un par de semanas</td></tr>
+      <tr><td>10 ml</td><td>~100</td><td>Uso casual durante meses</td></tr><tr><td>Botella (70 a 105 ml)</td><td>~700 a 1000</td><td>Tu aroma de cabecera</td></tr></tbody></table></div></details>
+    <details class="acc"><summary>EDT, EDP, Parfum y Extrait: ¿cuál es la diferencia?</summary><div class="acc-body">Cambia la proporción de aceites perfumados, y con ella la intensidad y la duración. Los porcentajes son rangos típicos y cada marca decide los suyos:
+      <table><thead><tr><th>Tipo</th><th>Concentración típica</th><th>Duración típica</th></tr></thead><tbody>
+      <tr><td>Eau de Toilette (EDT)</td><td>5 a 15 %</td><td>3 a 5 horas</td></tr><tr><td>Eau de Parfum (EDP)</td><td>15 a 20 %</td><td>5 a 8 horas</td></tr>
+      <tr><td>Parfum / Extrait</td><td>20 a 40 %</td><td>8 horas o más</td></tr></tbody></table></div></details>
+    <details class="acc"><summary>¿Cómo se conserva un decant?</summary><div class="acc-body">Lejos de la luz directa y del calor: un cajón o un armario es ideal, nunca el baño ni el carro. Cerrado y con el atomizador limpio, un decant puede durar años.</div></details>
+    <details class="acc"><summary>¿Y en esta demo?</summary><div class="acc-body">Aquí no se vende nada: puedes armar un carrito y generar una orden de prueba, que descuenta el stock de la base de datos para mostrar cómo funciona el backend.</div></details>
+  </div></section>
+</main>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

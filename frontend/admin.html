@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Administración · 10go's Perfumes</title>
+<meta name="description" content="Panel básico de la demo: inventario y órdenes de prueba.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Plus+Jakarta+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 fill=%27%23000%27/%3E%3Ctext x=%2716%27 y=%2722%27 font-size=%2716%27 text-anchor=%27middle%27 fill=%27%23C9A968%27 font-family=%27serif%27%3E10%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<main class="section on-dark"><div class="wrap">
+  <p class="eyebrow">Panel de administración</p><h1 style="font-size:clamp(2rem,4vw,3rem)">Inventario y órdenes</h1>
+  <p class="demo-note">Demostración sin inicio de sesión: en un sitio real este panel estaría protegido.</p>
+  <div class="stats" id="stats"></div>
+  <div class="admin-tabs"><button class="link" data-tab="inventory" aria-pressed="true">Inventario</button><button class="link" data-tab="orders" aria-pressed="false">Órdenes de prueba</button>
+    <span style="flex:1"></span><button class="btn" id="new-perfume">Nuevo perfume</button></div>
+  <div id="inventory-panel"><div id="inventory"></div></div>
+  <div id="orders-panel" hidden><div id="orders"></div></div>
+</div></main>
+<dialog id="perfume-dialog"><form id="perfume-form" method="dialog">
+  <h2 id="form-title">Perfume</h2>
+  <div class="field"><label>Nombre</label><input name="name" required></div>
+  <div class="field"><label>Marca</label><input name="brand" required></div>
+  <div class="field"><label>Categoría</label><select name="category"><option>Árabe</option><option>Diseñador</option><option>Nicho</option></select></div>
+  <div class="field"><label>Concentración</label><input name="concentration" required placeholder="Eau de Parfum"></div>
+  <div class="field"><label>Familia aromática</label><input name="aromatic_family" required></div>
+  <div class="field"><label>Duración</label><select name="duration"><option>Baja</option><option>Media</option><option selected>Alta</option></select></div>
+  <div class="field"><label>Estela</label><select name="sillage"><option>Suave</option><option selected>Moderada</option><option>Pesada</option></select></div>
+  <div class="field"><label>Ocasión (separadas por coma)</label><input name="occasion" required placeholder="Noche, Citas"></div>
+  <div class="field"><label>Año</label><input name="release_year" type="number" min="1900" max="2100"></div>
+  <div class="field"><label>Perfumista</label><input name="perfumer"></div>
+  <div class="field"><label>Notas de salida (coma)</label><input name="notes_top" required></div>
+  <div class="field"><label>Notas de corazón (coma)</label><input name="notes_heart" required></div>
+  <div class="field"><label>Notas de fondo (coma)</label><input name="notes_base" required></div>
+  <div class="field"><label>Acordes (una línea por acorde: nombre:porcentaje:#color)</label><textarea name="accords" required placeholder="Ámbar:100:#c97a2b"></textarea></div>
+  <div class="field" id="variants-field"><label>Formatos (una línea: ml:precio USD:stock)</label><textarea name="variants" placeholder="3:4.50:10&#10;100:38:5"></textarea></div>
+  <div class="field"><label>Imagen (ruta)</label><input name="image_url" placeholder="img/perfumes/khamrah.svg"></div>
+  <div class="field"><label>Descripción</label><textarea name="description"></textarea></div>
+  <div class="field"><label>Fuente de los datos</label><input name="source"></div>
+  <div class="field"><label><input type="checkbox" name="is_featured" style="width:auto"> Destacado</label></div>
+  <p class="error" id="form-error" role="alert"></p>
+  <button class="btn" type="submit">Guardar</button> &nbsp; <button class="link" type="button" id="form-cancel">Cancelar</button>
+</form></dialog>
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>

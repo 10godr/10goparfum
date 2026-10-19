@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" role="img" aria-label="Afnan 9 PM">
+<defs><radialGradient id="bg" cx="50%" cy="42%" r="70%"><stop offset="0" stop-color="#16223d" stop-opacity=".55"/><stop offset="1" stop-color="#050505"/></radialGradient>
+<linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#16223d"/><stop offset=".45" stop-color="#ffffff" stop-opacity=".28"/><stop offset="1" stop-color="#16223d"/></linearGradient></defs>
+<rect width="400" height="500" fill="url(#bg)"/>
+<ellipse cx="200" cy="440" rx="120" ry="12" fill="#000" opacity=".5"/>
+<rect x="178" y="166" width="44" height="34" fill="#C9A968"/><rect x="186" y="194" width="28" height="12" fill="#8B5E3C"/>
+<rect x="110" y="200" width="180" height="210" rx="8" fill="url(#g)" stroke="#C9A968" stroke-opacity=".5"/>
+<rect x="130" y="271" width="140" height="68" fill="#000" fill-opacity=".45" stroke="#E8DCC8" stroke-opacity=".35" stroke-width=".6"/>
+<text x="200" y="293" text-anchor="middle" font-family="Georgia,serif" font-size="9" letter-spacing="2" fill="#C9A968">AFNAN</text>
+<text x="200" y="315" text-anchor="middle" font-family="Georgia,serif" font-size="16" fill="#E8DCC8">9 PM</text>
+<rect x="150" y="210" width="10" height="150" fill="#fff" opacity=".07"/>
+</svg>

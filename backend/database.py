@@ -20,6 +20,10 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
     raise RuntimeError("Falta DATABASE_URL. Copia .env.example como .env y complétalo.")
 
+# Forzamos el driver psycopg2 (el que instalamos) aunque la URL diga solo "postgresql://".
+if DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://", 1)
+
 # Tasa fija de demostración USD -> DOP (se usa más adelante en la API).
 USD_TO_DOP = float(os.getenv("USD_TO_DOP", "61"))
 

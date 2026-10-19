@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" role="img" aria-label="Dior Sauvage Elixir">
+<defs><radialGradient id="bg" cx="50%" cy="42%" r="70%"><stop offset="0" stop-color="#4a2a12" stop-opacity=".55"/><stop offset="1" stop-color="#050505"/></radialGradient>
+<linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#4a2a12"/><stop offset=".45" stop-color="#ffffff" stop-opacity=".28"/><stop offset="1" stop-color="#4a2a12"/></linearGradient></defs>
+<rect width="400" height="500" fill="url(#bg)"/>
+<ellipse cx="200" cy="440" rx="120" ry="12" fill="#000" opacity=".5"/>
+<rect x="178" y="154" width="44" height="34" fill="#C9A968"/><rect x="186" y="182" width="28" height="12" fill="#8B5E3C"/>
+<circle cx="200" cy="300" r="112" fill="url(#g)" stroke="#C9A968" stroke-opacity=".5"/>
+<rect x="160" y="266" width="80" height="68" fill="#000" fill-opacity=".45" stroke="#E8DCC8" stroke-opacity=".35" stroke-width=".6"/>
+<text x="200" y="288" text-anchor="middle" font-family="Georgia,serif" font-size="9" letter-spacing="2" fill="#C9A968">DIOR</text>
+<text x="200" y="310" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#E8DCC8">Sauvage Elixir</text>
+<rect x="150" y="190" width="10" height="150" fill="#fff" opacity=".07"/>
+</svg>

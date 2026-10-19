@@ -46,7 +46,8 @@ class Perfume(Base):
 
     # cascade: si se borra un perfume, se borran también sus variantes.
     variants = relationship(
-        "PerfumeVariant", back_populates="perfume", cascade="all, delete-orphan"
+        "PerfumeVariant", back_populates="perfume", cascade="all, delete-orphan",
+        order_by="PerfumeVariant.size_ml",  # siempre del tamaño más pequeño al más grande
     )
 
 
