@@ -18,12 +18,15 @@ export async function initLayout() {
           <a href="index.html?category=Árabe#catalogo">Árabes</a>
           <a href="index.html?category=Diseñador#catalogo">Diseñador</a>
           <a href="index.html?category=Nicho#catalogo">Nicho</a>
-          <a href="index.html#guia">Guía de decants</a>
+          <a href="index.html#guia">Guía</a>
         </nav>
         <a class="logo" href="index.html" aria-label="10go's Perfumes, inicio"><b>10go's</b><small>PERFUMES</small></a>
         <div class="header-tools">
-          <button class="link" id="search-toggle" aria-expanded="false" aria-controls="search-bar">Buscar</button>
-          <button class="link" id="cart-open" aria-haspopup="dialog">Carrito<span class="cart-count" id="cart-count">0</span></button>
+          <button class="icon-btn" id="search-toggle" aria-label="Buscar" aria-expanded="false" aria-controls="search-bar">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></button>
+          <button class="icon-btn" id="cart-open" aria-label="Abrir carrito" aria-haspopup="dialog">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h3l2.4 12.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.1L21 7H6"/><circle cx="9.5" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>
+            <span class="cart-count" id="cart-count" hidden>0</span></button>
         </div>
       </div>
       <form class="search-bar" id="search-bar" role="search" action="index.html#catalogo">
@@ -43,7 +46,7 @@ export async function initLayout() {
       <div class="footer-grid">
         <div><div class="logo" style="text-align:left"><b>10go's</b><small>PERFUMES</small></div>
           <p>Proyecto de portafolio fullstack (FastAPI, PostgreSQL y JavaScript). No es una tienda real: no se venden productos, no se cobra y no se envía nada.</p></div>
-        <div><h4>Explorar</h4><ul><li><a href="index.html#catalogo">Catálogo</a></li><li><a href="index.html#guia">Guía de decants</a></li><li><a href="admin.html">Panel de administración</a></li></ul></div>
+        <div><h4>Explorar</h4><ul><li><a href="index.html#catalogo">Catálogo</a></li><li><a href="index.html#guia">Guía</a></li><li><a href="admin.html">Panel de administración</a></li></ul></div>
         <div><h4>Legal</h4><ul><li><a href="legal.html#terminos">Términos y condiciones</a></li><li><a href="legal.html#cookies">Política de cookies</a></li><li><a href="legal.html#marcas">Marcas e imágenes</a></li></ul></div>
       </div>
       <p class="legal-note">Las marcas y nombres de perfumes pertenecen a sus respectivos dueños y se usan solo con fines educativos y de demostración. Las imágenes mostradas son ilustraciones o fotografías de terceros usadas con fines ilustrativos.</p>
@@ -81,7 +84,9 @@ export async function initLayout() {
   const items = document.getElementById("drawer-items"), foot = document.getElementById("drawer-foot");
   function renderCart() {
     const cart = getCart();
-    document.getElementById("cart-count").textContent = cartCount();
+    const n = cartCount(), badge = document.getElementById("cart-count");
+    badge.textContent = n; badge.hidden = n === 0;
+    document.getElementById("cart-open").setAttribute("aria-label", n ? `Abrir carrito (${n})` : "Abrir carrito");
     items.innerHTML = cart.length ? cart.map((l) => html`
       <div class="line">
         <img class="${imgClass(l.image)}" src="${esc(l.image)}" alt="" width="64" height="80">
