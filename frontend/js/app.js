@@ -1,48 +1,65 @@
 // app.js: página principal (hero, destacados y catálogo con filtros).
-import { getFilters, getPerfumes, esc, imgClass } from "./api.js";
+import { getFilters, getPerfumes, esc } from "./api.js";
 import { cardHTML, initLayout } from "./layout.js";
 
+// Imágenes del hero: para usar fotos propias, cambia la ruta de `img` (por ejemplo "img/hero/hero-1.jpg").
+// Recomendado: fotos anchas (proporción 12:5, por ejemplo 1920x800) con los frascos abajo: el texto va centrado arriba.
 const SLIDES = [
-  { eyebrow: "Perfumería árabe", title: "Ámbar, dátiles y vainilla.", tint: "138,69,32", img: "img/perfumes/khamrah.svg", q: "Khamrah", cat: "Árabe", cta: "Explorar árabes",
-    text: "Khamrah de Lattafa: el gourmand que huele a postre y dura todo el día. Pruébalo primero en un decant de 3 ml." },
-  { eyebrow: "Diseñador", title: "El clásico, más concentrado.", tint: "74,42,18", img: "img/perfumes/sauvage-elixir.svg", q: "Sauvage Elixir", cat: "Diseñador", cta: "Explorar diseñador",
-    text: "Sauvage Elixir de Dior: lavanda, especias cálidas y regaliz en un extrait de larga duración." },
-  { eyebrow: "Nicho", title: "Una estela que se reconoce a distancia.", tint: "160,58,44", img: "img/perfumes/baccarat-rouge-540.svg", q: "Baccarat Rouge 540", cat: "Nicho", cta: "Explorar nicho",
-    text: "Baccarat Rouge 540 de Maison Francis Kurkdjian: azafrán, jazmín y un fondo ambarado inconfundible." },
+  { eyebrow: "Proyecto de portafolio", title: "10go's Perfumes", img: "img/hero/hero-1.svg", href: "#catalogo", cta: "Explorar el catálogo",
+    text: "Una tienda de perfumes y decants de demostración, hecha con FastAPI, PostgreSQL y JavaScript. No es una tienda real." },
+  { eyebrow: "Búsqueda avanzada", title: "Todo tipo de perfumes, por filtros.", img: "img/hero/hero-2.svg", href: "#catalogo", cta: "Probar los filtros",
+    text: "Filtra por notas olfativas, familia aromática, duración, estela y ocasión hasta encontrar el tuyo." },
+  { eyebrow: "Decants y botellas", title: "Pruébalos antes de elegir.", img: "img/hero/hero-3.svg", href: "#guia", cta: "Ver cómo funciona",
+    text: "Decants de 3, 5 y 10 ml o botella completa. Arma una orden de prueba: el stock baja de verdad en la base de datos." },
+  { eyebrow: "Datos reales", title: "Árabes, diseñador y nicho.", img: "img/hero/hero-4.svg", href: "#categorias", cta: "Ver las categorías",
+    text: "Notas, acordes y perfumistas verificados en Fragrantica, de Lattafa y Armaf a Dior y Creed." },
 ];
+const AUTOPLAY_MS = 10000;
+const CHEVRON = (d) => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;
 
 function initHero() {
   const hero = document.getElementById("hero");
   hero.innerHTML = SLIDES.map((s, i) => `
-    <section class="slide${i === 0 ? " active" : ""}" style="--tint:rgba(${s.tint},.5)" aria-roledescription="slide" aria-label="${i + 1} de ${SLIDES.length}">
+    <section class="slide${i === 0 ? " active" : ""}" aria-roledescription="slide" aria-label="${i + 1} de ${SLIDES.length}" ${i === 0 ? "" : 'aria-hidden="true"'}>
+      <img class="slide-bg" src="${s.img}" alt="" width="1920" height="800" ${i === 0 ? "" : 'loading="lazy"'}>
       <div class="slide-text"><p class="eyebrow">${s.eyebrow}</p><h1>${s.title}</h1><p>${s.text}</p>
-        <a class="btn" href="?category=${encodeURIComponent(s.cat)}#catalogo" data-cat="${s.cat}">${s.cta}</a></div>
-      <div class="slide-img"><img src="${s.img}" alt="" width="400" height="500"></div>
+        <a class="btn" href="${s.href}">${s.cta}</a></div>
     </section>`).join("") + `
-    <div class="hero-ctrl"><div class="dots">${SLIDES.map((_, i) => `<button class="dot" aria-label="Ir a la diapositiva ${i + 1}" aria-current="${i === 0}"></button>`).join("")}</div>
-    <div><button class="link" id="prev">Anterior</button> &nbsp; <button class="link" id="next">Siguiente</button></div></div>`;
-  // Si el perfume tiene foto real, reemplazamos la ilustración del slide.
-  SLIDES.forEach((s, k) => getPerfumes({ q: s.q }).then((r) => {
-    const url = r[0]?.image_url;
-    if (!url) return;
-    const box = hero.querySelectorAll(".slide-img")[k];
-    box.classList.add(...(imgClass(url) ? [imgClass(url)] : []));
-    box.querySelector("img").src = url;
-  }).catch(() => {}));
+    <button class="hero-arrow prev" id="prev" aria-label="Imagen anterior">${CHEVRON("M15 5l-7 7 7 7")}</button>
+    <button class="hero-arrow next" id="next" aria-label="Imagen siguiente">${CHEVRON("M9 5l7 7-7 7")}</button>
+    <div class="dots">${SLIDES.map((_, i) => `<button class="dot" aria-label="Ir a la imagen ${i + 1}" aria-current="${i === 0}"></button>`).join("")}</div>`;
+
   const slides = [...hero.querySelectorAll(".slide")], dots = [...hero.querySelectorAll(".dot")];
-  let i = 0, timer;
-  const go = (n) => {
-    i = (n + slides.length) % slides.length;
-    slides.forEach((s, k) => s.classList.toggle("active", k === i));
-    dots.forEach((d, k) => d.setAttribute("aria-current", k === i));
-  };
-  const play = () => { if (!matchMedia("(prefers-reduced-motion: reduce)").matches) timer = setInterval(() => go(i + 1), 6500); };
+  let current = 0, timer, cleanup;
+
+  // La imagen nueva aparece ENCIMA de la anterior (que sigue visible debajo) y se desvanece hacia opaca:
+  // ese es el efecto de superposición. Cuando termina, la anterior se oculta.
+  function go(n) {
+    const next = (n + slides.length) % slides.length;
+    if (next === current) return;
+    const old = slides[current];
+    clearTimeout(cleanup);
+    slides.forEach((s) => s.classList.remove("prev"));
+    old.classList.remove("active"); old.classList.add("prev");
+    slides[next].classList.add("active");
+    slides.forEach((s, k) => s.setAttribute("aria-hidden", k !== next));
+    dots.forEach((d, k) => d.setAttribute("aria-current", k === next));
+    cleanup = setTimeout(() => old.classList.remove("prev"), 1400);
+    current = next;
+  }
   const stop = () => clearInterval(timer);
-  dots.forEach((d, k) => d.addEventListener("click", () => go(k)));
-  hero.querySelector("#prev").addEventListener("click", () => go(i - 1));
-  hero.querySelector("#next").addEventListener("click", () => go(i + 1));
-  hero.addEventListener("mouseenter", stop); hero.addEventListener("mouseleave", () => { stop(); play(); });
-  hero.addEventListener("focusin", stop);
+  const play = () => {
+    stop();
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) timer = setInterval(() => go(current + 1), AUTOPLAY_MS);
+  };
+  // al usar flechas o puntos, reiniciamos la cuenta de 10 s
+  const manual = (n) => { go(n); play(); };
+  dots.forEach((d, k) => d.addEventListener("click", () => manual(k)));
+  hero.querySelector("#prev").addEventListener("click", () => manual(current - 1));
+  hero.querySelector("#next").addEventListener("click", () => manual(current + 1));
+  hero.addEventListener("keydown", (e) => { if (e.key === "ArrowLeft") manual(current - 1); if (e.key === "ArrowRight") manual(current + 1); });
+  hero.addEventListener("mouseenter", stop); hero.addEventListener("mouseleave", play);
+  hero.addEventListener("focusin", stop); hero.addEventListener("focusout", play);
   play();
 }
 

@@ -42,3 +42,7 @@ Por defecto los frascos son ilustraciones SVG. Para usar una foto, guárdala en 
 | Baccarat Rouge 540 | `baccarat-rouge-540` |
 
 Las fotos son de terceros (marcas o sitios de perfumería): anota su procedencia y mantén el aviso de `legal.html#marcas`.
+
+## Imágenes del hero (carrusel de portada)
+
+Son 4 banners en `frontend/img/hero/` (`hero-1.svg` a `hero-4.svg`) que cambian solos cada 10 segundos con un fundido superpuesto y se pueden pasar con las flechas o los puntos. Los textos están en `SLIDES` al inicio de `frontend/js/app.js`. Para usar tus propias fotos, cambia la ruta `img` de cada slide (por ejemplo `img/hero/hero-1.jpg`). Medida recomendada: 1920x800 px, con los frascos abajo (el texto va centrado arriba).
