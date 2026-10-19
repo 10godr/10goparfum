@@ -25,3 +25,20 @@ Abre http://localhost:8000 (el backend también sirve el frontend) y http://loca
 - `/admin.html` pide usuario y contraseña (JWT de 8 horas). Las rutas `/api/admin/*` devuelven 401 sin token; en `/docs` usa el botón *Authorize* con el token de `POST /api/auth/login`.
 - Catálogo: `GET /api/perfumes` acepta `category`, `family`, `note`, `duration`, `sillage`, `occasion`, `q`, `featured` y `sort` (`price_asc`, `price_desc`, `name`).
 - Las imágenes son ilustraciones SVG generadas para el proyecto.
+
+## Fotos reales de los perfumes
+
+Por defecto los frascos son ilustraciones SVG. Para usar una foto, guárdala en `frontend/img/perfumes/` con el nombre del perfume y la extensión `.webp`, `.jpg` o `.png` (mejor con fondo blanco y de formato vertical), y corre `python seed.py` otra vez. El seed usa la foto si existe y, si no, la ilustración.
+
+| Perfume | Archivo |
+|---|---|
+| Khamrah | `khamrah` |
+| Asad | `asad` |
+| 9 PM | `9pm` |
+| Club de Nuit Intense Man | `club-de-nuit-intense-man` |
+| Y Eau de Parfum | `y-edp` |
+| Sauvage Elixir | `sauvage-elixir` |
+| Aventus | `aventus` |
+| Baccarat Rouge 540 | `baccarat-rouge-540` |
+
+Las fotos son de terceros (marcas o sitios de perfumería): anota su procedencia y mantén el aviso de `legal.html#marcas`.

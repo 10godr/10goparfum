@@ -1,6 +1,6 @@
 // layout.js: partes comunes de todas las páginas (aviso, header, carrito lateral, footer, cookies).
 import { cartCount, cartTotal, getCart, removeItem, setQty } from "./cart.js";
-import { esc, loadRate, money } from "./api.js";
+import { esc, imgClass, loadRate, money } from "./api.js";
 
 const NOTICE = "⚡ PROYECTO DE PORTAFOLIO / DEMOSTRACIÓN TÉCNICA - NO ES UNA TIENDA REAL ⚡";
 const NOTICE2 = "NO SE REALIZAN COBROS NI ENVÍOS";
@@ -46,7 +46,7 @@ export async function initLayout() {
         <div><h4>Explorar</h4><ul><li><a href="index.html#catalogo">Catálogo</a></li><li><a href="index.html#guia">Guía de decants</a></li><li><a href="admin.html">Panel de administración</a></li></ul></div>
         <div><h4>Legal</h4><ul><li><a href="legal.html#terminos">Términos y condiciones</a></li><li><a href="legal.html#cookies">Política de cookies</a></li><li><a href="legal.html#marcas">Marcas e imágenes</a></li></ul></div>
       </div>
-      <p class="legal-note">Las marcas y nombres de perfumes pertenecen a sus respectivos dueños y se usan solo con fines educativos y de demostración. Las imágenes mostradas son ilustraciones generadas para el proyecto.</p>
+      <p class="legal-note">Las marcas y nombres de perfumes pertenecen a sus respectivos dueños y se usan solo con fines educativos y de demostración. Las imágenes mostradas son ilustraciones o fotografías de terceros usadas con fines ilustrativos.</p>
     </footer>
     <div class="cookie" id="cookie" role="dialog" aria-label="Aviso de cookies">
       <p>Este sitio usa almacenamiento técnico del navegador (localStorage) solo para recordar tu carrito. No usa cookies de seguimiento ni publicidad. <a href="legal.html#cookies">Más información</a></p>
@@ -84,7 +84,7 @@ export async function initLayout() {
     document.getElementById("cart-count").textContent = cartCount();
     items.innerHTML = cart.length ? cart.map((l) => html`
       <div class="line">
-        <img src="${esc(l.image)}" alt="" width="64" height="80">
+        <img class="${imgClass(l.image)}" src="${esc(l.image)}" alt="" width="64" height="80">
         <div><h4>${esc(l.name)}</h4><p>${esc(l.brand)} · ${l.size_ml} ml</p>
           <div class="qty"><button data-dec="${l.variant_id}" aria-label="Menos">−</button><span>${l.qty}</span><button data-inc="${l.variant_id}" aria-label="Más">+</button></div></div>
         <div style="text-align:right"><div>${money(l.price * l.qty)}</div><button class="link" data-rm="${l.variant_id}" style="margin-top:8px">Quitar</button></div>
@@ -119,7 +119,7 @@ export async function initLayout() {
 export function cardHTML(p) {
   const stockOut = p.variants.every((v) => v.stock === 0);
   return html`<a class="card" href="producto.html?id=${p.id}">
-    <div class="card-img"><img src="${esc(p.image_url)}" alt="${esc(p.brand)} ${esc(p.name)}" loading="lazy" width="400" height="500">
+    <div class="card-img ${imgClass(p.image_url)}"><img src="${esc(p.image_url)}" alt="${esc(p.brand)} ${esc(p.name)}" loading="lazy" width="400" height="500">
       ${stockOut ? '<span class="card-badge">Agotado</span>' : p.is_featured ? '<span class="card-badge">Destacado</span>' : ""}</div>
     <p class="card-brand">${esc(p.brand)}</p><h3>${esc(p.name)}</h3>
     <p class="card-meta">${esc(p.concentration)} · ${p.variants.length} tamaños: ${p.variants.map((v) => v.size_ml).join(" · ")} ml</p>

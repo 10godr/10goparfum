@@ -61,3 +61,6 @@ export function toast(msg) {
   t.textContent = msg; t.classList.add("show");
   clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 2200);
 }
+
+// Las fotos reales (jpg/png/webp) se muestran sobre fondo claro y sin recortar; las ilustraciones SVG llenan el recuadro.
+export const imgClass = (url) => (/\.svg$/i.test(url || "") ? "" : "photo");

@@ -1,13 +1,13 @@
 // app.js: página principal (hero, destacados y catálogo con filtros).
-import { getFilters, getPerfumes, esc } from "./api.js";
+import { getFilters, getPerfumes, esc, imgClass } from "./api.js";
 import { cardHTML, initLayout } from "./layout.js";
 
 const SLIDES = [
-  { eyebrow: "Perfumería árabe", title: "Ámbar, dátiles y vainilla.", tint: "138,69,32", img: "img/perfumes/khamrah.svg", cat: "Árabe", cta: "Explorar árabes",
+  { eyebrow: "Perfumería árabe", title: "Ámbar, dátiles y vainilla.", tint: "138,69,32", img: "img/perfumes/khamrah.svg", q: "Khamrah", cat: "Árabe", cta: "Explorar árabes",
     text: "Khamrah de Lattafa: el gourmand que huele a postre y dura todo el día. Pruébalo primero en un decant de 3 ml." },
-  { eyebrow: "Diseñador", title: "El clásico, más concentrado.", tint: "74,42,18", img: "img/perfumes/sauvage-elixir.svg", cat: "Diseñador", cta: "Explorar diseñador",
+  { eyebrow: "Diseñador", title: "El clásico, más concentrado.", tint: "74,42,18", img: "img/perfumes/sauvage-elixir.svg", q: "Sauvage Elixir", cat: "Diseñador", cta: "Explorar diseñador",
     text: "Sauvage Elixir de Dior: lavanda, especias cálidas y regaliz en un extrait de larga duración." },
-  { eyebrow: "Nicho", title: "Una estela que se reconoce a distancia.", tint: "160,58,44", img: "img/perfumes/baccarat-rouge-540.svg", cat: "Nicho", cta: "Explorar nicho",
+  { eyebrow: "Nicho", title: "Una estela que se reconoce a distancia.", tint: "160,58,44", img: "img/perfumes/baccarat-rouge-540.svg", q: "Baccarat Rouge 540", cat: "Nicho", cta: "Explorar nicho",
     text: "Baccarat Rouge 540 de Maison Francis Kurkdjian: azafrán, jazmín y un fondo ambarado inconfundible." },
 ];
 
@@ -21,6 +21,14 @@ function initHero() {
     </section>`).join("") + `
     <div class="hero-ctrl"><div class="dots">${SLIDES.map((_, i) => `<button class="dot" aria-label="Ir a la diapositiva ${i + 1}" aria-current="${i === 0}"></button>`).join("")}</div>
     <div><button class="link" id="prev">Anterior</button> &nbsp; <button class="link" id="next">Siguiente</button></div></div>`;
+  // Si el perfume tiene foto real, reemplazamos la ilustración del slide.
+  SLIDES.forEach((s, k) => getPerfumes({ q: s.q }).then((r) => {
+    const url = r[0]?.image_url;
+    if (!url) return;
+    const box = hero.querySelectorAll(".slide-img")[k];
+    box.classList.add(...(imgClass(url) ? [imgClass(url)] : []));
+    box.querySelector("img").src = url;
+  }).catch(() => {}));
   const slides = [...hero.querySelectorAll(".slide")], dots = [...hero.querySelectorAll(".dot")];
   let i = 0, timer;
   const go = (n) => {

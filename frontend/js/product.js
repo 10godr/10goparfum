@@ -1,5 +1,5 @@
 // product.js: detalle de un perfume (selector de formato, gráfico de acordes, ficha técnica).
-import { dop, esc, getPerfume, getPerfumes, toDop, toast, usd } from "./api.js";
+import { dop, esc, getPerfume, getPerfumes, imgClass, toDop, toast, usd } from "./api.js";
 import { addItem } from "./cart.js";
 import { cardHTML, initLayout } from "./layout.js";
 
@@ -18,7 +18,7 @@ function render(p) {
   let qty = 1;
 
   root.innerHTML = `
-    <div class="product-img"><img src="${esc(p.image_url)}" alt="${esc(p.brand)} ${esc(p.name)}" width="400" height="500"></div>
+    <div class="product-img ${imgClass(p.image_url)}"><img src="${esc(p.image_url)}" alt="${esc(p.brand)} ${esc(p.name)}" width="400" height="500"></div>
     <div>
       <p class="eyebrow">${esc(p.brand)} · ${esc(p.category)}</p>
       <h1 style="font-size:clamp(2.2rem,5vw,3.6rem)">${esc(p.name)}</h1>

@@ -185,3 +185,8 @@ dialog { background: var(--charcoal); color: var(--cream); border: 1px solid var
 .admin-tabs .link[aria-pressed="true"] { color: var(--gold); }
 /* Cormorant usa números "antiguos" (el 1 parece una I); forzamos números alineados en todo el sitio. */
 * { font-feature-settings: "lnum" 1 !important; }
+
+/* fotos reales: fondo claro y la foto completa (sin recortar) */
+.photo { background: #f2eee8 !important; }
+.photo img { object-fit: contain; padding: 7%; mix-blend-mode: multiply; } /* multiply funde el blanco de la foto con el fondo */
+.line img.photo { object-fit: contain; background: #f2eee8; padding: 3px; }

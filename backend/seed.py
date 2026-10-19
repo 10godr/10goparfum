@@ -11,8 +11,20 @@ SOBRE LOS DATOS
 - Duración y estela son percepciones aproximadas de la comunidad, no mediciones.
 - Los precios (USD) son de DEMOSTRACIÓN pero verosímiles. El precio en DOP se calcula en la API.
 """
+from pathlib import Path
+
 from database import Base, SessionLocal, engine
 from models import Perfume, PerfumeVariant
+
+IMG_DIR = Path(__file__).resolve().parent.parent / "frontend" / "img" / "perfumes"
+
+
+def find_image(slug):
+    """Si existe una foto frontend/img/perfumes/<slug>.(webp|jpg|jpeg|png) la usa; si no, la ilustración SVG."""
+    for ext in ("webp", "jpg", "jpeg", "png"):
+        if (IMG_DIR / f"{slug}.{ext}").exists():
+            return f"img/perfumes/{slug}.{ext}"
+    return f"img/perfumes/{slug}.svg"
 
 # Colores por acorde: se reutilizan para que el gráfico se vea coherente.
 ACCORD_COLORS = {
@@ -28,7 +40,6 @@ ACCORD_COLORS = {
     "Animálico": "#8a6f5a", "Especiado suave": "#c98f62",
 }
 
-SLUG_IMG = "img/perfumes/{}.svg"
 BASE_SRC = "Fragrantica (notas, acordes, año y perfumista; oct. 2026). Concentración: marca/tiendas. Duración y estela: percepción aproximada."
 
 PERFUMES = [
@@ -117,7 +128,7 @@ def run():
             sizes = p.pop("sizes")
             slug = p.pop("slug")
             accords = [{"name": n, "percentage": pct, "color": ACCORD_COLORS[n]} for n, pct in p.pop("accords")]
-            perfume = Perfume(**p, accords=accords, image_url=SLUG_IMG.format(slug), source=BASE_SRC)
+            perfume = Perfume(**p, accords=accords, image_url=find_image(slug), source=BASE_SRC)
             perfume.variants = [
                 PerfumeVariant(size_ml=ml, is_decant=ml < 30, price=price, stock=stock)
                 for ml, price, stock in sizes
@@ -125,6 +136,7 @@ def run():
             db.add(perfume)
         db.commit()
         print(f"Listo: {db.query(Perfume).count()} perfumes y {db.query(PerfumeVariant).count()} variantes.")
+        print("Fotos usadas:", sum(1 for p in db.query(Perfume) if not p.image_url.endswith(".svg")), "de", db.query(Perfume).count())
     finally:
         db.close()
 
