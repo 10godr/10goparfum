@@ -1,7 +1,7 @@
 // product.js: detalle de un perfume (selector de formato, gráfico de acordes, ficha técnica).
-import { dop, esc, getPerfume, money, toDop, toast, usd } from "./api.js";
+import { dop, esc, getPerfume, getPerfumes, toDop, toast, usd } from "./api.js";
 import { addItem } from "./cart.js";
-import { initLayout } from "./layout.js";
+import { cardHTML, initLayout } from "./layout.js";
 
 const root = document.getElementById("product");
 
@@ -85,10 +85,20 @@ function render(p) {
   update();
 }
 
+function $related(list) {
+  document.getElementById("related-grid").innerHTML = list.map(cardHTML).join("");
+  document.getElementById("related").hidden = false;
+}
+
 async function init() {
   await initLayout();
   const id = new URLSearchParams(location.search).get("id");
-  try { render(await getPerfume(id)); }
+  try {
+    const p = await getPerfume(id);
+    render(p);
+    const others = (await getPerfumes({ category: p.category })).filter((o) => o.id !== p.id).slice(0, 4);
+    if (others.length) { $related(others); }
+  }
   catch (e) { root.innerHTML = `<p class="empty" style="grid-column:1/-1">No se encontró el perfume (${esc(e.message)}). <a href="index.html#catalogo">Volver al catálogo</a></p>`; }
 }
 init();

@@ -128,3 +128,14 @@ class OrderOut(BaseModel):
     @property
     def total_price_dop(self) -> Decimal:
         return to_dop(self.total_price)
+
+
+# ---------- Login del administrador ----------
+class LoginIn(BaseModel):
+    username: str
+    password: str
+
+
+class TokenOut(BaseModel):
+    access_token: str
+    token_type: str

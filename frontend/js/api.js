@@ -3,14 +3,27 @@
 // Si abres el HTML con otro servidor (Live Server), define antes: window.API_BASE = "http://localhost:8000"
 const BASE = (window.API_BASE || "") + "/api";
 
+// --- Sesión del administrador: el token JWT se guarda en localStorage ---
+const TOKEN_KEY = "10go_admin_token";
+export const getToken = () => { try { return localStorage.getItem(TOKEN_KEY); } catch { return null; } };
+const setToken = (t) => { try { t ? localStorage.setItem(TOKEN_KEY, t) : localStorage.removeItem(TOKEN_KEY); } catch { /* ignorado */ } };
+export const logout = () => setToken(null);
+export async function login(username, password) {
+  const data = await api("/auth/login", { method: "POST", body: { username, password } });
+  setToken(data.access_token);
+}
+
 export async function api(path, options = {}) {
-  const res = await fetch(BASE + path, {
-    headers: { "Content-Type": "application/json" },
-    ...options,
-    body: options.body ? JSON.stringify(options.body) : undefined,
-  });
+  const headers = { "Content-Type": "application/json" };
+  const token = getToken();
+  if (token) headers.Authorization = `Bearer ${token}`;
+  const res = await fetch(BASE + path, { ...options, headers, body: options.body ? JSON.stringify(options.body) : undefined });
   if (res.status === 204) return null;
   const data = await res.json().catch(() => ({}));
+  if (res.status === 401 && path.startsWith("/admin")) {
+    setToken(null); // token caducado o inválido: obligamos a iniciar sesión otra vez
+    window.dispatchEvent(new CustomEvent("auth:expired"));
+  }
   if (!res.ok) {
     // FastAPI manda {detail: "texto"} o {detail: [{msg}, ...]} en errores de validación
     const d = data.detail;

@@ -6,7 +6,7 @@ Backend: FastAPI + SQLAlchemy + PostgreSQL. Frontend: HTML, CSS y JavaScript van
 ## Cómo correrlo
 
 1. Crea la base de datos en PostgreSQL: `CREATE DATABASE diez_go_perfumes;`
-2. `cd backend` y copia `.env.example` como `.env` (pon tu contraseña de PostgreSQL).
+2. `cd backend` y copia `.env.example` como `.env`. Pon tu contraseña de PostgreSQL y define `ADMIN_USER`, `ADMIN_PASSWORD` y `JWT_SECRET` (el login del admin).
 3. `pip install -r requirements.txt`
 4. `python seed.py` (crea las tablas y carga 8 perfumes con sus formatos).
 5. `uvicorn main:app --reload`
@@ -15,12 +15,13 @@ Abre http://localhost:8000 (el backend también sirve el frontend) y http://loca
 
 ## Estructura
 
-- `backend/database.py` conexión · `models.py` tablas · `schemas.py` validación · `main.py` endpoints · `seed.py` datos iniciales
+- `backend/database.py` conexión · `models.py` tablas · `schemas.py` validación · `auth.py` login JWT · `main.py` endpoints · `seed.py` datos iniciales
 - `frontend/` páginas (`index`, `producto`, `checkout`, `admin`, `legal`), `css/styles.css` y `js/` (módulos ES)
 
 ## Notas
 
 - Precios guardados en USD; los pesos dominicanos se calculan con `USD_TO_DOP` (61 por defecto, en `.env`).
-- Las notas de los perfumes vienen de fichas de marca y públicas. Los porcentajes de acordes, la duración y la estela son **aproximados** y deben revisarse contra Fragrantica.
-- El panel `/admin.html` no tiene login por ahora (el JWT queda como siguiente paso).
+- Notas, acordes (con su fuerza relativa), año y perfumista están verificados en Fragrantica (octubre de 2026); la concentración viene de la marca o tiendas. La duración y la estela son percepciones aproximadas.
+- `/admin.html` pide usuario y contraseña (JWT de 8 horas). Las rutas `/api/admin/*` devuelven 401 sin token; en `/docs` usa el botón *Authorize* con el token de `POST /api/auth/login`.
+- Catálogo: `GET /api/perfumes` acepta `category`, `family`, `note`, `duration`, `sillage`, `occasion`, `q`, `featured` y `sort` (`price_asc`, `price_desc`, `name`).
 - Las imágenes son ilustraciones SVG generadas para el proyecto.

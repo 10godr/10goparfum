@@ -12,13 +12,25 @@
 </head>
 <body>
 <main class="section on-dark"><div class="wrap">
-  <p class="eyebrow">Panel de administración</p><h1 style="font-size:clamp(2rem,4vw,3rem)">Inventario y órdenes</h1>
-  <p class="demo-note">Demostración sin inicio de sesión: en un sitio real este panel estaría protegido.</p>
+  <p class="eyebrow">Panel de administración</p>
+  <section id="login-view" class="narrow" hidden>
+    <h1 style="font-size:clamp(2rem,4vw,3rem)">Iniciar sesión</h1>
+    <p class="demo-note">Acceso solo para el administrador del proyecto. Las credenciales se definen en el archivo <code>.env</code> del backend.</p>
+    <form id="login-form" style="max-width:420px">
+      <div class="field"><label for="l-user">Usuario</label><input id="l-user" name="username" autocomplete="username" required></div>
+      <div class="field"><label for="l-pass">Contraseña</label><input id="l-pass" name="password" type="password" autocomplete="current-password" required></div>
+      <p class="error" id="login-error" role="alert"></p>
+      <button class="btn" type="submit">Entrar</button>
+    </form>
+  </section>
+  <div id="admin-view" hidden>
+  <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:12px"><h1 style="font-size:clamp(2rem,4vw,3rem)">Inventario y órdenes</h1><button class="link" id="logout">Cerrar sesión</button></div>
   <div class="stats" id="stats"></div>
   <div class="admin-tabs"><button class="link" data-tab="inventory" aria-pressed="true">Inventario</button><button class="link" data-tab="orders" aria-pressed="false">Órdenes de prueba</button>
     <span style="flex:1"></span><button class="btn" id="new-perfume">Nuevo perfume</button></div>
   <div id="inventory-panel"><div id="inventory"></div></div>
   <div id="orders-panel" hidden><div id="orders"></div></div>
+  </div>
 </div></main>
 <dialog id="perfume-dialog"><form id="perfume-form" method="dialog">
   <h2 id="form-title">Perfume</h2>

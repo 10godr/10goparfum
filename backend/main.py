@@ -8,7 +8,7 @@ from decimal import Decimal
 from pathlib import Path
 from typing import List, Optional
 
-from fastapi import Depends, FastAPI, HTTPException, Query
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import String, cast, func, or_
@@ -16,6 +16,7 @@ from sqlalchemy.orm import Session, selectinload
 
 import models
 import schemas
+from auth import check_credentials, create_token, require_admin
 from database import USD_TO_DOP, Base, engine, get_db
 
 # Crea las tablas si no existen (para este proyecto simple no necesitamos migraciones).
@@ -44,6 +45,7 @@ def list_perfumes(
     note: Optional[str] = Query(None, description="Nota olfativa, ej. Vainilla"),
     q: Optional[str] = Query(None, description="Búsqueda por nombre o marca"),
     featured: Optional[bool] = None,
+    sort: Optional[str] = Query(None, pattern="^(price_asc|price_desc|name)$", description="price_asc, price_desc o name"),
     db: Session = Depends(get_db),
 ):
     """Lista perfumes. Todos los filtros son opcionales y se pueden combinar."""
@@ -78,7 +80,17 @@ def list_perfumes(
         pattern = f"%{q}%"
         query = query.filter(or_(models.Perfume.name.ilike(pattern), models.Perfume.brand.ilike(pattern)))
 
-    return query.order_by(models.Perfume.id).all()
+    perfumes = query.order_by(models.Perfume.id).all()
+
+    # Ordenar en Python: el precio "desde" es el de la variante más barata de cada perfume.
+    cheapest = lambda p: min((v.price for v in p.variants), default=0)
+    if sort == "price_asc":
+        perfumes.sort(key=cheapest)
+    elif sort == "price_desc":
+        perfumes.sort(key=cheapest, reverse=True)
+    elif sort == "name":
+        perfumes.sort(key=lambda p: p.name.lower())
+    return perfumes
 
 
 @app.get("/api/filters")
@@ -177,8 +189,19 @@ def get_order(order_code: str, db: Session = Depends(get_db)):
     return order
 
 
-# ====================== Admin básico (sin login por ahora) ======================
-@app.get("/api/admin/stats")
+# ====================== Login y admin (protegido con JWT) ======================
+@app.post("/api/auth/login", response_model=schemas.TokenOut)
+def login(data: schemas.LoginIn):
+    if not check_credentials(data.username, data.password):
+        raise HTTPException(status_code=401, detail="Usuario o contraseña incorrectos")
+    return {"access_token": create_token(data.username), "token_type": "bearer"}
+
+
+# Todas las rutas de este router exigen un token válido (dependencia require_admin).
+admin = APIRouter(prefix="/api/admin", tags=["admin"], dependencies=[Depends(require_admin)])
+
+
+@admin.get("/stats")
 def admin_stats(db: Session = Depends(get_db)):
     revenue = db.query(func.coalesce(func.sum(models.Order.total_price), 0)).scalar()
     return {
@@ -190,12 +213,12 @@ def admin_stats(db: Session = Depends(get_db)):
     }
 
 
-@app.get("/api/admin/orders", response_model=List[schemas.OrderOut])
+@admin.get("/orders", response_model=List[schemas.OrderOut])
 def admin_orders(db: Session = Depends(get_db)):
     return db.query(models.Order).order_by(models.Order.id.desc()).all()
 
 
-@app.post("/api/admin/perfumes", response_model=schemas.PerfumeOut, status_code=201)
+@admin.post("/perfumes", response_model=schemas.PerfumeOut, status_code=201)
 def admin_create_perfume(data: schemas.PerfumeCreate, db: Session = Depends(get_db)):
     payload = data.model_dump(exclude={"variants"})
     perfume = models.Perfume(**payload)
@@ -206,7 +229,7 @@ def admin_create_perfume(data: schemas.PerfumeCreate, db: Session = Depends(get_
     return perfume
 
 
-@app.put("/api/admin/perfumes/{perfume_id}", response_model=schemas.PerfumeOut)
+@admin.put("/perfumes/{perfume_id}", response_model=schemas.PerfumeOut)
 def admin_update_perfume(perfume_id: int, data: schemas.PerfumeBase, db: Session = Depends(get_db)):
     """Edita los datos del perfume (no sus variantes; esas se editan con PATCH /variants)."""
     perfume = db.get(models.Perfume, perfume_id)
@@ -219,7 +242,7 @@ def admin_update_perfume(perfume_id: int, data: schemas.PerfumeBase, db: Session
     return perfume
 
 
-@app.patch("/api/admin/variants/{variant_id}", response_model=schemas.VariantOut)
+@admin.patch("/variants/{variant_id}", response_model=schemas.VariantOut)
 def admin_update_variant(variant_id: int, data: schemas.VariantUpdate, db: Session = Depends(get_db)):
     variant = db.get(models.PerfumeVariant, variant_id)
     if not variant:
@@ -233,13 +256,16 @@ def admin_update_variant(variant_id: int, data: schemas.VariantUpdate, db: Sessi
     return variant
 
 
-@app.delete("/api/admin/perfumes/{perfume_id}", status_code=204)
+@admin.delete("/perfumes/{perfume_id}", status_code=204)
 def admin_delete_perfume(perfume_id: int, db: Session = Depends(get_db)):
     perfume = db.get(models.Perfume, perfume_id)
     if not perfume:
         raise HTTPException(status_code=404, detail="Perfume no encontrado")
     db.delete(perfume)
     db.commit()
+
+
+app.include_router(admin)
 
 
 # ====================== Frontend estático ======================

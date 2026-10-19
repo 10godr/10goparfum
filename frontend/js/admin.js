@@ -1,5 +1,5 @@
 // admin.js: panel básico (sin login por ahora): resumen, inventario editable y órdenes de prueba.
-import { api, dop, esc, getPerfumes, toast, usd } from "./api.js";
+import { api, dop, esc, getPerfumes, getToken, login, logout, toast, usd } from "./api.js";
 import { initLayout } from "./layout.js";
 
 const $ = (id) => document.getElementById(id);
@@ -42,7 +42,24 @@ async function loadOrders() {
     `</tbody></table></div>` : `<p class="empty">Todavía no hay órdenes de prueba.</p>`;
 }
 
-const refresh = () => Promise.all([loadStats(), loadInventory(), loadOrders()]).catch((e) => { $("inventory").innerHTML = `<p class="error">${esc(e.message)}</p>`; });
+// ---- sesión: mostramos el login o el panel según haya token ----
+function showView(loggedIn) {
+  $("login-view").hidden = loggedIn;
+  $("admin-view").hidden = !loggedIn;
+  if (!loggedIn) $("l-user").focus();
+}
+const refresh = () => Promise.all([loadStats(), loadInventory(), loadOrders()]).catch((e) => { if (getToken()) $("inventory").innerHTML = `<p class="error">${esc(e.message)}</p>`; });
+
+$("login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  $("login-error").textContent = "";
+  try {
+    await login(e.target.username.value, e.target.password.value);
+    e.target.reset(); showView(true); refresh();
+  } catch (ex) { $("login-error").textContent = ex.message; }
+});
+$("logout").addEventListener("click", () => { logout(); showView(false); });
+window.addEventListener("auth:expired", () => { showView(false); $("login-error").textContent = "Tu sesión caducó. Inicia sesión otra vez."; });
 
 // ---- inventario: guardar variante / editar / eliminar ----
 $("inventory").addEventListener("click", async (e) => {
@@ -107,4 +124,7 @@ document.querySelectorAll("[data-tab]").forEach((b) => b.addEventListener("click
   $("orders-panel").hidden = b.dataset.tab !== "orders";
 }));
 
-initLayout().then(refresh);
+initLayout().then(() => {
+  showView(!!getToken());
+  if (getToken()) refresh();
+});
