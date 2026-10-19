@@ -49,7 +49,29 @@
     <div class="grid" id="catalog-grid"></div></div></section>
 
   <section class="section on-dark" id="guia"><div class="wrap narrow" style="margin-inline:auto">
-    <p class="eyebrow">Guía interactiva</p><h2>Decants y tipos de perfume</h2>
+    <p class="eyebrow">Guía interactiva</p><h2>Guía de 10go's Perfumes</h2>
+    <p style="color:var(--muted);max-width:60ch">Todo lo que necesitas saber para recorrer el sitio: qué es este proyecto, cómo funciona la tienda de demostración y cómo leer la información de cada perfume.</p>
+
+    <p class="eyebrow acc-group">Sobre el proyecto</p>
+    <details class="acc"><summary>¿Qué es 10go's Perfumes?</summary><div class="acc-body">Es un proyecto de portafolio: una tienda de perfumes y decants hecha para demostrar habilidades de desarrollo fullstack. <strong>No es una tienda real</strong>: no se vende nada, no se cobra y no se envía ningún producto. Todo lo que ves funciona de verdad, pero con fines demostrativos.</div></details>
+    <details class="acc"><summary>¿Cómo está hecho?</summary><div class="acc-body">El catálogo, el stock y las órdenes viven en una base de datos PostgreSQL. Un backend en Python (FastAPI y SQLAlchemy) ofrece una API, y esta página, escrita en HTML, CSS y JavaScript sin frameworks, la consulta en tiempo real. Por eso los filtros, el stock y las órdenes responden sin recargar la página.</div></details>
+    <details class="acc"><summary>¿De dónde salen los datos de los perfumes?</summary><div class="acc-body">Las notas, los acordes, el año y el perfumista de cada perfume se tomaron de Fragrantica. La duración y la estela son percepciones aproximadas y pueden variar de una persona a otra. Los precios son ficticios, y las marcas y nombres pertenecen a sus dueños (más detalles en la <a href="legal.html#marcas">sección legal</a>).</div></details>
+
+    <p class="eyebrow acc-group">Cómo funciona la tienda</p>
+    <details class="acc"><summary>¿Cómo hago un pedido de prueba?</summary><div class="acc-body">
+      <ol style="padding-left:1.2em;margin:0">
+        <li>Entra a un perfume y elige el formato: decant de 3, 5 o 10 ml, o botella completa.</li>
+        <li>Pulsa «Añadir al carrito». Puedes revisarlo y cambiarlo en el panel lateral.</li>
+        <li>Ve al checkout y escribe datos de prueba (nombre, correo y notas). No se pide ninguna tarjeta.</li>
+        <li>Genera la orden de prueba: recibirás un ticket con un código como ORD-1001 y el stock del perfume bajará en la base de datos.</li>
+      </ol></div></details>
+    <details class="acc"><summary>¿Por qué hay precios en dos monedas?</summary><div class="acc-body">Los precios se guardan en dólares (US$) y se muestran también en pesos dominicanos (RD$). La conversión usa una tasa fija de demostración de 61 pesos por dólar, que no sigue el mercado.</div></details>
+    <details class="acc"><summary>¿Qué significa «Agotado»?</summary><div class="acc-body">Cada formato de cada perfume tiene su propio stock. Cuando una orden de prueba compra la última unidad, ese formato pasa a «Agotado» y deja de poder añadirse al carrito, igual que ocurriría en una tienda real.</div></details>
+    <details class="acc"><summary>¿Qué es el panel de administración?</summary><div class="acc-body">Es una zona protegida con usuario y contraseña donde el administrador del proyecto ve las órdenes de prueba, edita precios y stock, y crea o modifica perfumes. Está en el enlace «Panel de administración» del pie de página.</div></details>
+
+    <p class="eyebrow acc-group">Conoce los perfumes</p>
+    <details class="acc"><summary>¿Cómo leo la ficha de un perfume?</summary><div class="acc-body">Las <strong>notas</strong> se organizan en tres fases: salida (lo primero que hueles), corazón (el cuerpo del aroma) y fondo (lo que queda horas después). El gráfico de <strong>main accords</strong> muestra las sensaciones dominantes: la barra más larga (100) es la que más se nota y las demás se miden respecto a ella. La <strong>familia aromática</strong> resume el estilo general, y la duración y la estela indican cuánto dura y cuánto se proyecta.</div></details>
+    <details class="acc"><summary>¿Cómo uso los filtros del catálogo?</summary><div class="acc-body">Puedes combinar filtros por categoría, familia aromática, nota olfativa, duración, estela y ocasión, y buscar por nombre o marca con la lupa. También puedes ordenar por precio o por nombre. Los resultados se actualizan al instante.</div></details>
     <details class="acc"><summary>¿Qué es un decant?</summary><div class="acc-body">Es una porción del perfume original pasada a un atomizador pequeño. Permite probar un aroma caro o desconocido durante semanas, sin comprar el frasco completo. El líquido es el mismo del frasco original.</div></details>
     <details class="acc"><summary>¿Cuántos sprays rinde cada tamaño?</summary><div class="acc-body">Un spray libera aproximadamente 0.1 ml (varía según el atomizador). Valores orientativos:
       <table><thead><tr><th>Tamaño</th><th>Sprays aprox.</th><th>Para qué sirve</th></tr></thead><tbody>
@@ -70,7 +92,6 @@
       <tr><td>Precio típico</td><td>Bajo a medio (US$ 25 a 60)</td><td>Medio a alto (US$ 100 a 200)</td><td>Alto (US$ 250 o más)</td></tr>
       <tr><td>En esta demo</td><td>Lattafa, Afnan, Armaf</td><td>Dior, Yves Saint Laurent</td><td>Creed, Maison Francis Kurkdjian</td></tr>
       </tbody></table></div></div></details>
-    <details class="acc"><summary>¿Y en esta demo?</summary><div class="acc-body">Aquí no se vende nada: puedes armar un carrito y generar una orden de prueba, que descuenta el stock de la base de datos para mostrar cómo funciona el backend.</div></details>
   </div></section>
 </main>
 <script type="module" src="js/app.js"></script>
