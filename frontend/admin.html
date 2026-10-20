@@ -37,16 +37,17 @@
   <div class="field"><label>Nombre</label><input name="name" required></div>
   <div class="field"><label>Marca</label><input name="brand" required></div>
   <div class="field"><label>Categoría</label><select name="category"><option>Árabe</option><option>Diseñador</option><option>Nicho</option></select></div>
-  <div class="field"><label>Concentración</label><input name="concentration" required placeholder="Eau de Parfum"></div>
-  <div class="field"><label>Familia aromática</label><input name="aromatic_family" required></div>
+  <div class="field"><label>Concentración</label><select name="concentration" required><option>Eau de Parfum</option><option>Eau de Toilette</option><option>Parfum</option><option>Extrait de Parfum</option><option>Elixir</option><option>Eau de Cologne</option><option>Eau Fraîche</option></select></div>
+  <div class="field"><label>Familia aromática</label><select name="aromatic_family" required></select></div>
   <div class="field"><label>Duración</label><select name="duration"><option>Baja</option><option>Media</option><option selected>Alta</option></select></div>
   <div class="field"><label>Estela</label><select name="sillage"><option>Suave</option><option selected>Moderada</option><option>Pesada</option></select></div>
-  <div class="field"><label>Ocasión (separadas por coma)</label><input name="occasion" required placeholder="Noche, Citas"></div>
+  <div class="field"><label>Ocasión (elige una o varias)</label><input type="hidden" name="occasion"><div class="chip-picker" data-picker="occasion"></div></div>
   <div class="field"><label>Año</label><input name="release_year" type="number" min="1900" max="2100"></div>
   <div class="field"><label>Perfumista</label><input name="perfumer"></div>
-  <div class="field"><label>Notas de salida (coma)</label><input name="notes_top" required></div>
-  <div class="field"><label>Notas de corazón (coma)</label><input name="notes_heart" required></div>
-  <div class="field"><label>Notas de fondo (coma)</label><input name="notes_base" required></div>
+  <div class="field"><label>Notas de salida</label><input type="hidden" name="notes_top"><div class="chip-picker" data-picker="notes_top"></div></div>
+  <div class="field"><label>Notas de corazón</label><input type="hidden" name="notes_heart"><div class="chip-picker" data-picker="notes_heart"></div></div>
+  <div class="field"><label>Notas de fondo</label><input type="hidden" name="notes_base"><div class="chip-picker" data-picker="notes_base"></div></div>
+  <datalist id="note-options"></datalist>
   <div class="field"><label>Acordes (una línea por acorde: nombre:porcentaje:#color)</label><textarea name="accords" required placeholder="Ámbar:100:#c97a2b"></textarea></div>
   <div class="field" id="variants-field"><label>Formatos (una línea: ml:precio USD:stock)</label><textarea name="variants" placeholder="3:4.50:10&#10;100:38:5"></textarea></div>
   <div class="field"><label>Imagen (ruta)</label><input name="image_url" placeholder="img/perfumes/khamrah.svg"></div>

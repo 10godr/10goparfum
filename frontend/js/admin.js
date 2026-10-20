@@ -79,15 +79,78 @@ $("inventory").addEventListener("click", async (e) => {
 
 // ---- formulario de perfume (crear / editar) ----
 const list = (s) => s.split(",").map((x) => x.trim()).filter(Boolean);
+const sortEs = (arr) => [...new Set(arr)].sort((a, b) => a.localeCompare(b, "es"));
+
+// Opciones base; se suman las que ya existen en el catálogo.
+const FAMILIES = ["Acuático", "Amaderado", "Amaderado Acuático", "Amaderado Especiado", "Aromático", "Aromático Acuático", "Aromático Fougère",
+  "Chipre", "Chipre Frutal", "Cítrico", "Cítrico Aromático", "Cuero", "Floral", "Floral Afrutado", "Floral Amaderado Almizclado",
+  "Gourmand", "Oriental", "Oriental Amaderado", "Oriental Especiado", "Oriental Floral", "Oriental Vainilla"];
+const OCCASIONS = ["Día", "Noche", "Primavera", "Verano", "Otoño", "Invierno", "Casual", "Oficina", "Citas", "Fiesta", "Formal", "Deporte"];
+const NOTES = ["Ámbar", "Ambroxan", "Almizcle", "Anís estrellado", "Bergamota", "Benjuí", "Cachemira", "Cacao", "Café", "Canela", "Cardamomo",
+  "Cedro", "Cuero", "Dátiles", "Elemí", "Geranio", "Haba tonka", "Heliotropo", "Incienso", "Iris", "Jazmín", "Jengibre", "Lavanda",
+  "Limón", "Madera de oud", "Mandarina", "Manzana", "Miel", "Mirra", "Musgo de roble", "Naranja", "Neroli", "Nuez moscada", "Pachulí",
+  "Pimienta negra", "Pimienta rosa", "Piña", "Pomelo", "Praliné", "Rosa", "Romero", "Salvia", "Sándalo", "Tabaco", "Tuberosa",
+  "Vainilla", "Vetiver", "Violeta", "Ylang-ylang", "Azafrán", "Caramelo", "Coco", "Grosella negra", "Melocotón", "Pera"];
+
+// Selector de etiquetas: con `options` muestra botones fijos; con `free` deja escribir o elegir de la lista de sugerencias.
+function chipPicker(name, { options = [], free = false }) {
+  const el = document.querySelector(`[data-picker="${name}"]`), hidden = pform.elements[name];
+  let values = [], rendering = false;
+  const add = (v) => { v = v.trim(); if (v && !values.includes(v)) values.push(v); };
+  function render() {
+    hidden.value = values.join(", ");
+    rendering = true; // al reemplazar el input se dispara focusout; lo ignoramos
+    el.innerHTML = free
+      ? values.map((v) => `<button type="button" class="chip" aria-pressed="true" data-v="${esc(v)}" title="Quitar">${esc(v)}<span class="x">×</span></button>`).join("") +
+        `<input list="note-options" placeholder="Escribe o elige una nota y pulsa Enter">`
+      : options.map((o) => `<button type="button" class="chip" aria-pressed="${values.includes(o)}" data-v="${esc(o)}">${esc(o)}</button>`).join("");
+    rendering = false;
+  }
+  const commit = (input) => { if (input.value.trim()) { add(input.value); render(); el.querySelector("input").focus(); } };
+  el.addEventListener("click", (e) => {
+    const b = e.target.closest(".chip"); if (!b) return;
+    const v = b.dataset.v;
+    values = values.includes(v) ? values.filter((x) => x !== v) : [...values, v];
+    render();
+  });
+  if (free) {
+    el.addEventListener("keydown", (e) => { if (e.target.tagName === "INPUT" && (e.key === "Enter" || e.key === ",")) { e.preventDefault(); commit(e.target); } });
+    // elegir una sugerencia de la lista la agrega de inmediato
+    el.addEventListener("input", (e) => { if (e.target.tagName === "INPUT" && (!e.inputType || e.inputType === "insertReplacementText")) commit(e.target); });
+    el.addEventListener("focusout", (e) => { if (!rendering && e.target.tagName === "INPUT" && e.target.value.trim()) { add(e.target.value); render(); } });
+  }
+  return { set(arr, opts) { if (opts) options = opts; values = []; arr.forEach(add); render(); }, get: () => values };
+}
+const pickers = {
+  occasion: chipPicker("occasion", { options: OCCASIONS }),
+  notes_top: chipPicker("notes_top", { free: true }),
+  notes_heart: chipPicker("notes_heart", { free: true }),
+  notes_base: chipPicker("notes_base", { free: true }),
+};
+function ensureOption(select, value) {
+  if (value && ![...select.options].some((o) => o.value === value)) select.add(new Option(value, value));
+}
+function fillOptions() {
+  const fam = pform.elements.aromatic_family, current = fam.value;
+  fam.innerHTML = sortEs([...FAMILIES, ...perfumes.map((p) => p.aromatic_family)]).map((f) => `<option>${esc(f)}</option>`).join("");
+  if (current) fam.value = current;
+  $("note-options").innerHTML = sortEs([...NOTES, ...perfumes.flatMap((p) => [...p.notes_top, ...p.notes_heart, ...p.notes_base])])
+    .map((n) => `<option value="${esc(n)}">`).join("");
+}
 function openForm(p = null) {
   pform.reset();
   pform.dataset.id = p ? p.id : "";
   $("form-title").textContent = p ? `Editar ${p.name}` : "Nuevo perfume";
   $("variants-field").hidden = !!p; // las variantes existentes se editan en la tabla
+  fillOptions();
+  const occ = p ? list(p.occasion) : [];
+  pickers.occasion.set(occ, [...OCCASIONS, ...occ.filter((o) => !OCCASIONS.includes(o))]);
+  for (const k of ["notes_top", "notes_heart", "notes_base"]) pickers[k].set(p ? p[k] : []);
   if (p) {
-    for (const k of ["name", "brand", "category", "concentration", "aromatic_family", "duration", "sillage", "occasion", "release_year", "perfumer", "image_url", "description", "source"]) pform.elements[k].value = p[k] ?? "";
+    ensureOption(pform.elements.concentration, p.concentration);
+    ensureOption(pform.elements.aromatic_family, p.aromatic_family);
+    for (const k of ["name", "brand", "category", "concentration", "aromatic_family", "duration", "sillage", "release_year", "perfumer", "image_url", "description", "source"]) pform.elements[k].value = p[k] ?? "";
     pform.elements.is_featured.checked = p.is_featured;
-    for (const k of ["notes_top", "notes_heart", "notes_base"]) pform.elements[k].value = p[k].join(", ");
     pform.elements.accords.value = p.accords.map((a) => `${a.name}:${a.percentage}:${a.color}`).join("\n");
   }
   $("form-error").textContent = "";
@@ -99,6 +162,9 @@ $("form-cancel").addEventListener("click", () => dlg.close());
 pform.addEventListener("submit", async (e) => {
   e.preventDefault();
   const f = pform.elements, id = pform.dataset.id;
+  const missing = [["occasion", "una ocasión"], ["notes_top", "una nota de salida"], ["notes_heart", "una nota de corazón"], ["notes_base", "una nota de fondo"]]
+    .find(([k]) => !pickers[k].get().length);
+  if (missing) { $("form-error").textContent = `Elige al menos ${missing[1]}.`; return; }
   try {
     const body = {
       name: f.name.value, brand: f.brand.value, category: f.category.value, concentration: f.concentration.value,

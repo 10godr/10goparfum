@@ -177,6 +177,12 @@ details.acc .acc-body { padding: 0 0 26px; color: var(--muted); max-width: 70ch;
 .checkout { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(28px, 5vw, 70px); align-items: start; }
 .field { margin-bottom: 20px; } .field label { display: block; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
 .field input, .field textarea, .field select { width: 100%; background: transparent; color: var(--cream); border: 0; border-bottom: 1px solid var(--line); padding: 10px 0; font: 300 15px var(--font-body); letter-spacing: .04em; border-radius: 0; } .field textarea { min-height: 80px; resize: vertical; border: 1px solid var(--line); padding: 10px; border-radius: var(--radius); }
+.field option, .field optgroup { color: #000; background: #fff; }
+.chip-picker { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.chip-picker .chip { background: transparent; color: var(--cream); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; font: 300 13px var(--font-body); cursor: pointer; }
+.chip-picker .chip[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: #000; }
+.chip-picker .chip .x { margin-left: 6px; opacity: .7; }
+.field .chip-picker input { flex: 1; min-width: 160px; width: auto; border: 0; padding: 6px 0; }
 .field input:focus, .field textarea:focus { outline: none; border-color: var(--gold); }
 .demo-note { border: 1px solid var(--gold); color: var(--gold); padding: 14px 16px; font-size: 12px; letter-spacing: .06em; border-radius: var(--radius); margin: 0 0 26px; }
 .error { color: #e58a7a; font-size: 13px; min-height: 1.4em; } .ticket { border: 1px solid var(--gold); padding: clamp(22px, 4vw, 44px); border-radius: var(--radius); max-width: 640px; margin-inline: auto; }
