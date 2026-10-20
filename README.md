@@ -5,6 +5,8 @@ Backend: FastAPI + SQLAlchemy + PostgreSQL. Frontend: HTML, CSS y JavaScript van
 
 ## Cómo correrlo
 
+> Primera vez con bases de datos? Sigue la [guía paso a paso para Windows](docs/GUIA_EJECUTAR.md).
+
 1. Crea la base de datos en PostgreSQL: `CREATE DATABASE diez_go_perfumes;`
 2. `cd backend` y copia `.env.example` como `.env`. Pon tu contraseña de PostgreSQL y define `ADMIN_USER`, `ADMIN_PASSWORD` y `JWT_SECRET` (el login del admin).
 3. `pip install -r requirements.txt`
