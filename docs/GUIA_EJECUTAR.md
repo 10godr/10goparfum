@@ -38,7 +38,7 @@ python --version
 ```
 
 - **Git**: si no aparece, instálalo desde https://git-scm.com
-- **Python 3.11, 3.12 o 3.13** (recomendado). Si `python` no se reconoce, prueba con `py --version`. Al instalar Python marca la casilla **"Add Python to PATH"**.
+- **Python 3.11 o más nuevo** (3.14 funciona). Si `python` no se reconoce, prueba con `py --version`. Al instalar Python marca la casilla **"Add Python to PATH"**.
 - **PostgreSQL**: ya lo tienes. Necesitas saber **la contraseña del usuario `postgres`** que elegiste al instalarlo y el puerto (casi siempre `5432`).
 
 ---
@@ -76,11 +76,13 @@ Cuando funciona, verás `(venv)` al inicio de la línea de PowerShell. Luego ins
 pip install -r requirements.txt
 ```
 
-Si al activar sale un error de "ejecución de scripts deshabilitada", corre esto una vez y vuelve a activar:
+Si al activar sale un error de "la ejecución de scripts está deshabilitada", es una protección de Windows. Corre esto **una sola vez**, responde `S` (Sí) y vuelve a activar:
 
 ```powershell
 Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 ```
+
+Solo afecta a tu usuario y permite scripts creados en tu computadora (como el del entorno virtual).
 
 ---
 
@@ -269,7 +271,7 @@ PostgreSQL ya corre solo en segundo plano; no hay que encenderlo (salvo que lo h
 | `RuntimeError: Falta DATABASE_URL` o `Faltan JWT_SECRET y ADMIN_PASSWORD` | No existe el `.env` o le faltan esas líneas. Revisa el paso 5. Debe estar en la carpeta `backend`. |
 | `ModuleNotFoundError: No module named ...` | No activaste el entorno virtual (no ves `(venv)`) o falta `pip install -r requirements.txt`. |
 | `python` no se reconoce | Prueba `py` en vez de `python`, o reinstala Python marcando «Add Python to PATH». |
-| Error de instalación de `psycopg2-binary` | Suele pasar con versiones de Python muy nuevas. Usa Python 3.11, 3.12 o 3.13. |
+| Error de instalación de `psycopg2-binary` | Actualiza pip (`python -m pip install --upgrade pip`) y vuelve a instalar. |
 | `Address already in use` / puerto 8000 ocupado | Hay otro programa (o otro uvicorn) usando el puerto. Usa otro: `uvicorn main:app --reload --port 8001` y abre http://localhost:8001. |
 | La tienda carga pero sin perfumes | No corriste `python seed.py`, o el backend no está encendido. |
 | En el admin: «Sesión no válida o caducada» | Vuelve a iniciar sesión. Pasa si pasaron 8 horas o cambiaste `JWT_SECRET`. |
